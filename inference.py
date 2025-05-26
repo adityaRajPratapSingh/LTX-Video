@@ -198,6 +198,12 @@ def main():
         default=None,
         help="Path to the folder to save output video, if None will save in outputs/ directory.",
     )
+    parser.add_argument(
+        "--custom_output_filename",
+        type=str,
+        default="output.mp4",
+        help="Absolute path to save the output",
+    )
     parser.add_argument("--seed", type=int, default="171198")
 
     # Pipeline parameters
@@ -396,6 +402,7 @@ def create_latent_upsampler(latent_upsampler_model_path: str, device: str):
 
 def infer(
     output_path: Optional[str],
+    custom_output_filename: Optional[str],
     seed: int,
     pipeline_config: str,
     image_cond_noise_scale: float,
@@ -662,11 +669,11 @@ def infer(
             )
 
             # Write video
-            with imageio.get_writer(output_filename, fps=fps) as video:
+            with imageio.get_writer(custom_output_filename, fps=fps) as video:
                 for frame in video_np:
                     video.append_data(frame)
 
-        logger.warning(f"Output saved to {output_filename}")
+        logger.warning(f"Output saved to {custom_output_filename}")
 
 
 def prepare_conditioning(
